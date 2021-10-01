@@ -31,4 +31,5 @@ The inner ,[] section can repeat as often as you like.
 3. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there. 
 
 See also:
+- Connecting servos to the NodeMCU's and connecting external battery power is much easier via this little <a href="https://oshpark.com/shared_projects/FvZB8gX9">RC Servo adapter PCB</a>
 - <a href="https://docs.google.com/presentation/d/1CeP5DSfR2xFZyUt2vdPWOcWJbTkmyCsVTNZQbRQhnUI/edit?usp=sharing">Steampunk Presentation on using the bot as an animation platform</a>
