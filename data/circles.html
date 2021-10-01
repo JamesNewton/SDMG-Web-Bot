@@ -1,0 +1,39 @@
+<html>
+  <header>
+    <title></title>
+  </header>
+  <body>
+Circle Jerk
+<form onSubmit="return false;">
+<input type="text" name="speed" size=4 value="50" > Speed (ms between steps)<br>
+<input type="text" name="width" size=4 value="500" > Width
+<input type="text" name="height" size=4 value="500" > Height
+<br><input type="text" name="cycles" size=4 value="5" > Cycles
+<br><input type="button" value="calc" onclick="calc(this.form.height.value, this.form.width.value, this.form.speed.value, this.form.cycles.value); return false;">
+</form>
+
+<div id="appDiv"></div>
+
+<script>
+  // Write Javascript code!
+  function calc(h,w,s,c) {
+const appDiv = document.getElementById("appDiv");
+appDiv.innerHTML = `[`+s;
+
+for (var j=0; j<c; j++) {
+  for (var i=0; i<Math.PI*2; i+=Math.PI*2/20) {
+    appDiv.innerHTML += "[";
+    appDiv.innerHTML += Math.floor(Math.sin(i)*w);
+    appDiv.innerHTML += ":";
+    appDiv.innerHTML += Math.floor(Math.cos(i)*h);
+    appDiv.innerHTML += ":0],<BR>";
+  }
+}
+
+appDiv.innerHTML += `[0:0:0]]`;
+}
+
+  </script>
+  </body>
+  </html>
+  
