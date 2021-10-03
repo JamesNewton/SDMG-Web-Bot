@@ -35,13 +35,20 @@ The inner ,[] section can repeat as often as you like.
 - The USB connector prints debug data. Connect via e.g. PuTTY or screen to the com port at 115,200 baud, No parity, 8 data bits, 1 stop bit. 
 - It will also accept commands to play back animation .JSON files. e.g. <tt>/1</tt> will cause /1.JSON to play back. 
 - The onboard edior is available by adding `/edit` to the URL. 
+  <BR>![editor](https://user-images.githubusercontent.com/419392/135738555-d4a901bc-d6ba-4154-9623-ee87019079da.png)
+
   - To create a file, enter the file name (always start with "/") then press Create.
   - To upload a file press Upload, select the file locally, and it will be added to the robot. 
   - To edit a file, select it on the left, then edit on the right, and be sure to click Save
   - To rename or copy a file, create the new file, then slect the old file, select it's contents, copy them, and then select the new file and paste the content into it and save. 
   - To delete a file, right click it and select Delete.
 - Can connect to local WiFi router by adding a file (can create in onboard editor) called wifi.txt with the routers wifi SSID (name) and then a ":" and the password. e.g. <tt>mywifi:mypasssword</tt>. On restart, it wll connect to local wii and take the DHCP assigned wifi address. You can find that address by monitoring the serial debug data.
-
+- The `loop` function in the /robot.js file can be used to add code which will be called regularly when the robot is being controlled. This is a great place to add code to read sensors, filter input, or other interesting code. 
+  
+ ## Data Flow
+  ![dataflow](https://user-images.githubusercontent.com/419392/135737811-5097d13e-1ff1-4e0d-95b7-87b00e22b9c2.png)
+  
+  
 See also:
 - Connecting servos to the NodeMCU's and connecting external battery power is much easier via this little <a href="https://oshpark.com/shared_projects/FvZB8gX9">RC Servo adapter PCB</a>
 - <a href="https://docs.google.com/presentation/d/1CeP5DSfR2xFZyUt2vdPWOcWJbTkmyCsVTNZQbRQhnUI/edit?usp=sharing">Steampunk Presentation on using the bot as an animation platform</a>
