@@ -42,7 +42,7 @@ The inner ,[] section can repeat as often as you like.
   - To edit a file, select it on the left, then edit on the right, and be sure to click Save
   - To rename or copy a file, create the new file, then slect the old file, select it's contents, copy them, and then select the new file and paste the content into it and save. 
   - To delete a file, right click it and select Delete.
-- Can connect to local WiFi router by adding a file (can create in onboard editor) called wifi.txt with the routers wifi SSID (name) and then a ":" and the password. e.g. <tt>mywifi:mypasssword</tt>. On restart, it wll connect to local wii and take the DHCP assigned wifi address. You can find that address by monitoring the serial debug data.
+- Can connect to local WiFi router by adding a file (can create in onboard editor) called wifi.txt with the routers wifi SSID (name) and then a ":" and the password. e.g. <tt>mywifi:mypasssword</tt>. On restart, it wll connect to local wii and take the DHCP assigned wifi address. You can find that address by monitoring the serial debug data, from the router, or using an app like advanced-ip-scanner (Windows) or fing (iOS, Android) 
 - The `loop` function in the /robot.js file can be used to add code which will be called regularly when the robot is being controlled. This is a great place to add code to read sensors, filter input, or other interesting code. 
   
  ## Data Flow
