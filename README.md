@@ -27,7 +27,7 @@ You will need to install:
 2. It supports recording and playback of your manual control. 
 Press the red button, move the controls, click the recordin off, then under the gear, use one of the Save buttons and then the Animate buttons to play it back.
 You can also edit the recording in the text box on Settings panel. The format is <tt>[_interval_, [*delay*, *left*:*right*:*weapon*]]</tt>.
-The inner ,[] section can repeat as often as you like. 
+The inner ,[] section can repeat as often as you like. They are saved in the file system as /1.JSON, /2.JSON, etc... and can also be edited, downloaded or uploaded in the file editor. If you create a /0.JSON file, it will be played back automatically on startup.
   
 3. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
   
