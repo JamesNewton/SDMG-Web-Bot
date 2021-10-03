@@ -52,3 +52,4 @@ The inner ,[] section can repeat as often as you like. They are saved in the fil
 See also:
 - Connecting servos to the NodeMCU's and connecting external battery power is much easier via this little <a href="https://oshpark.com/shared_projects/FvZB8gX9">RC Servo adapter PCB</a>
 - <a href="https://docs.google.com/presentation/d/1CeP5DSfR2xFZyUt2vdPWOcWJbTkmyCsVTNZQbRQhnUI/edit?usp=sharing">Steampunk Presentation on using the bot as an animation platform</a>
+- <a href="https://github.com/JamesNewton/AdvancedRoboticsWithJavascript/wiki#week-4-day-1-the-bot">Edcuational Course using the SDMG Bot</a>
