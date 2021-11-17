@@ -5,8 +5,18 @@ https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
 which started out as
 https://github.com/jmalins/BattleBot-Control
 
-This new version is hacked in a few "interesting" ways:
-1. It compiles for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
+This new version is updated in a few "interesting" ways:
+1. It supports recording and playback of your manual control. 
+Press the red button, move the controls, click the recordin off, then under the gear, use one of the Save buttons and then the Animate buttons to play it back.
+You can also edit the recording in the text box on Settings panel. The format is <tt>[_interval_, [*delay*, *left*:*right*:*weapon*]]</tt>.
+The inner ,[] section can repeat as often as you like. They are saved in the file system as /1.JSON, /2.JSON, etc... and can also be edited, downloaded or uploaded in the file editor. If you create a /0.JSON file, it will be played back automatically on startup.
+<br>![Control Page](https://user-images.githubusercontent.com/419392/136255712-a1a32200-db01-432b-a2fa-a7d1682e08b1.png)
+<br>![Control Settings page](https://user-images.githubusercontent.com/419392/136254679-caab4dbd-3fd5-4eb1-a2a9-d1af3abfd033.png)
+
+2. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
+https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
+
+3. It compiles for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
 (Probably won't work under Arduino IDE without some effort). 
 The key is that the ESP32 has far more processing ower and will (eventually) support https web service which will allow access to the sensor 
 (including the camera) on the cell phone.
@@ -24,15 +34,7 @@ You will need to install:
 <br>- madhephaestus/ESP32Servo @ ^0.9.0 
 (note <a href="https://github.com/madhephaestus/ESP32Servo/issues/23">issue with configuration corruption</a>)
 
-2. It supports recording and playback of your manual control. 
-Press the red button, move the controls, click the recordin off, then under the gear, use one of the Save buttons and then the Animate buttons to play it back.
-You can also edit the recording in the text box on Settings panel. The format is <tt>[_interval_, [*delay*, *left*:*right*:*weapon*]]</tt>.
-The inner ,[] section can repeat as often as you like. They are saved in the file system as /1.JSON, /2.JSON, etc... and can also be edited, downloaded or uploaded in the file editor. If you create a /0.JSON file, it will be played back automatically on startup.
-<br>![Control Page](https://user-images.githubusercontent.com/419392/136255712-a1a32200-db01-432b-a2fa-a7d1682e08b1.png)
-<br>![Control Settings page](https://user-images.githubusercontent.com/419392/136254679-caab4dbd-3fd5-4eb1-a2a9-d1af3abfd033.png)
 
-3. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
-  
 ## Additional features:
 - The USB connector prints debug data. Connect via e.g. PuTTY or screen to the com port at 115,200 baud, No parity, 8 data bits, 1 stop bit. 
 - It will also accept commands to play back animation .JSON files. e.g. <tt>/1</tt> will cause /1.JSON to play back. 
@@ -56,3 +58,5 @@ See also:
 <br>![RC Servo Adapter, NodeMCU, Breadboard, Servo](https://user-images.githubusercontent.com/419392/136256607-2089903e-0541-40fc-8341-240238bef7ae.png)
 - <a href="https://docs.google.com/presentation/d/1CeP5DSfR2xFZyUt2vdPWOcWJbTkmyCsVTNZQbRQhnUI/edit?usp=sharing">Steampunk Presentation on using the bot as an animation platform</a>
 - <a href="https://github.com/JamesNewton/AdvancedRoboticsWithJavascript/wiki#week-4-day-1-the-bot">Edcuational Course using the SDMG Bot</a>
+- https://youtu.be/kWHx6a_4-iI?t=1523 Presentation about the bot for the Seattle Robotics Society
+    
