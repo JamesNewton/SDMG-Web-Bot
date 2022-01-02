@@ -56,7 +56,12 @@ You will need to install:
 See also:
 - Connecting servos to the NodeMCU's and connecting external battery power is much easier via this little <a href="https://hackaday.io/project/181972-massmind-rc-servo-adapter">RC Servo adapter PCB</a>
 <br>![RC Servo Adapter, NodeMCU, Breadboard, Servo](https://user-images.githubusercontent.com/419392/136256607-2089903e-0541-40fc-8341-240238bef7ae.png)
-- <a href="https://docs.google.com/presentation/d/1CeP5DSfR2xFZyUt2vdPWOcWJbTkmyCsVTNZQbRQhnUI/edit?usp=sharing">Steampunk Presentation on using the bot as an animation platform</a>
+- <a href="https://docs.google.com/presentation/d/1CeP5DSfR2xFZyUt2vdPWOcWJbTkmyCsVTNZQbRQhnUI/edit?usp=sharing">Steampunk Presentation on using the bot as an animation platform</a> at <a href="http://gaslightgathering.org/">Gaslight Gathering 2021</a>
 - <a href="https://github.com/JamesNewton/AdvancedRoboticsWithJavascript/wiki#week-4-day-1-the-bot">Edcuational Course using the SDMG Bot</a>
+- Class on <a href="https://jamesnewton.github.io/class/presentESP8266blink.html#1">Arduino (esp)</a>, <a href="https://jamesnewton.github.io/class/presentESP8266servo.html#1">Servos</a>, and <a href="https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#battlebot-control-servo">the Bot</a> at SDCoLab 2019
+- <a href="https://goo.gl/photos/vmKWgHmUPouctquz8">Images / Videos of the "Cardboard Combat" origins</a> with <a href="https://www.sdmakersguild.org/events/cardboard-combat-bots/">San Diego Makers Guild</a>
+- <a href="https://www.sdmakersguild.org/steambot-build-day-at-gaslight-gathering-april-13-2019/">Steampunk version</a> built at <a href="http://gaslightgathering.org/">Gaslight Gathering 2019</a> (also 2021)
+- https://www.youtube.com/watch?v=SbmjmV-a6yE demo of the ping sensor working
 - https://youtu.be/kWHx6a_4-iI?t=1523 Presentation about the bot for the Seattle Robotics Society
+
     
