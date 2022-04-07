@@ -36,5 +36,5 @@ const char robot27[] PROGMEM = "ThomasEKurtz";
 const char robot28[] PROGMEM = "AlanMathisonTuring";
 const char robot29[] PROGMEM = "KonradErnstOttoZuse";
 const char robot30[] PROGMEM = "AlickEdwardsGlennie";
-const char robot31[] PROGMEM = "";
+const char robot31[] PROGMEM = "FrancesElizabethAllen";
 const char robot32[] PROGMEM = "";
