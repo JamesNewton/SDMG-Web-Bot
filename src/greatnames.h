@@ -37,5 +37,9 @@ const char robot28[] PROGMEM = "AlanMathisonTuring"; //Turing Test, Turing Machi
 const char robot29[] PROGMEM = "KonradErnstOttoZuse"; //First digital computer, First design of a high level language
 const char robot30[] PROGMEM = "AlickEdwardsGlennie"; //First compiled language; Autocode
 const char robot31[] PROGMEM = "FrancesElizabethAllen"; //graph-theoretic structures for optimizing compilers
-const char robot32[] PROGMEM = "";
- automated bombe method
+const char robot32[] PROGMEM = "DouglasCarlEngelbart"; //The Demo, the mouse, hypertext, UI
+const char robot33[] PROGMEM = "";
+const char robot34[] PROGMEM = "";
+const char robot35[] PROGMEM = "";
+const char robot36[] PROGMEM = "";
+const char robot37[] PROGMEM = "";
