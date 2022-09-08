@@ -24,7 +24,7 @@ The key is that the ESP32 has far more processing ower and will (eventually) sup
 ### Web programming
 
 You can program this with just Chrome! No IDE, no programs, no nothing. Just 
-1. plug in the ESP, download the release files, 
+1. plug in the ESP, download the [release files](https://github.com/JamesNewton/SDMG-Web-Bot/releases), 
 2. open the manifest.json file and look at the "parts" section. 
 3. go to:
 https://espressif.github.io/esptool-js/
