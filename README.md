@@ -21,6 +21,22 @@ https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
 The key is that the ESP32 has far more processing ower and will (eventually) support https web service which will allow access to the sensor 
 (including the camera) on the cell phone.
 
+### Web programming
+
+You can program this with just Chrome! No IDE, no programs, no nothing. Just 
+1. plug in the ESP, download the release files, 
+2. open the manifest.json file and look at the "parts" section. 
+3. go to:
+https://espressif.github.io/esptool-js/
+then select the port and connect. Verify it detects the chip, and loads the stub. 
+4. Copy in the offset for the first file (it takes decimal), and select the file. 
+5. for each following file, press Add file, copy in the offset and select the file. 
+6. Hit program, hold breath. 
+7. When complete Reset or power cycle. 
+8. Smile.
+
+### Development
+
 You will need to install:
 - Platforms: "Espressif 8266" and "Espressif 32"
 - Boards: "nodemcuv2" for the NodeMCU (8266) and "node32s" for the DevKitC 
