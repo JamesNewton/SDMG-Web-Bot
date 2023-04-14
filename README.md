@@ -24,16 +24,16 @@ The key is that the ESP32 has far more processing ower and will (eventually) sup
 ### Web programming
 
 You can program this with just Chrome! No IDE, no programs, no nothing. Just 
-1. plug in the ESP, download the [release files](https://github.com/JamesNewton/SDMG-Web-Bot/releases), 
+1. plug in the ESP, download the [release files](https://github.com/JamesNewton/SDMG-Web-Bot/releases) in the "Source" .zip or .tar.gz file and extract them locally.
 2. open the manifest.json file and look at the "parts" section. 
 3. go to:
 https://espressif.github.io/esptool-js/
 then select the port and connect. Verify it detects the chip, and loads the stub. 
-4. Copy in the offset for the first file (it takes decimal), and select the file. 
+4. Copy in the offset for the first file (it takes decimal) listed in the manifest, and select the matching file. 
 5. for each following file, press Add file, copy in the offset and select the file. 
 6. Hit program, hold breath. 
 7. When complete Reset or power cycle. 
-8. Smile.
+8. Smile. (or cry and contact me for help)
 
 ### Development
 
