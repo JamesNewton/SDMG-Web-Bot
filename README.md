@@ -24,11 +24,12 @@ The key is that the ESP32 has far more processing ower and will (eventually) sup
 ### Web programming
 
 You can program this with just Chrome! No IDE, no programs, no nothing. Just 
-1. plug in the ESP, download the [release files](https://github.com/JamesNewton/SDMG-Web-Bot/releases) in the "Source" .zip or .tar.gz file and extract them locally.
+1. download the [release files](https://github.com/JamesNewton/SDMG-Web-Bot/releases) in the "Source" .zip or .tar.gz file and extract them locally.
 2. open the manifest.json file and look at the "parts" section. 
 3. go to:
 https://espressif.github.io/esptool-js/
-then select the port and connect. Verify it detects the chip, and loads the stub. 
+and check the ports, then plug in the robot to the PC. It takes a USB A to micro A cable; and that needs to be a "data" type cable, not charge only version. When connected, the servos will spin and that can be a problem, because the USB port won't supply enough power. So disconnect the servos from the board temporarily.
+When you plug in, you should see a new port show up. Select that port and connect. Don't change the baud rate. Verify it detects the chip, and loads the stub. 
 4. Copy in the offset for the first file (it takes decimal) listed in the manifest, and select the matching file. 
 5. for each following file, press Add file, copy in the offset and select the file. 
 6. Hit program, hold breath. 
