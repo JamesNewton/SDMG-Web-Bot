@@ -15,12 +15,30 @@ The inner ,[] section can repeat as often as you like. They are saved in the fil
 <br>![Control Page](https://user-images.githubusercontent.com/419392/136255712-a1a32200-db01-432b-a2fa-a7d1682e08b1.png)
 <br>![Control Settings page](https://user-images.githubusercontent.com/419392/136254679-caab4dbd-3fd5-4eb1-a2a9-d1af3abfd033.png)
 
-2. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
+
+2. It compiles for the ESP8266 under the Arduino IDE as setup on this branch. See the main branch for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
+
+3. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
 https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
 
-3. It compiles for the ESP8266 under the Arduino IDE as setup on this branch. See the main branch for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
+- The USB connector prints debug data. Connect via e.g. PuTTY or screen to the com port at 115,200 baud, No parity, 8 data bits, 1 stop bit. 
+- It will also accept commands to play back animation .JSON files. e.g. <tt>/1</tt> will cause /1.JSON to play back. 
+- The onboard edior is available by adding `/edit` to the URL. 
+  <BR>![editor](https://user-images.githubusercontent.com/419392/135738555-d4a901bc-d6ba-4154-9623-ee87019079da.png)
 
-## Development
+  - To create a file, enter the file name (always start with "/") then press Create.
+  - To upload a file press Upload, select the file locally, and it will be added to the robot. 
+  - To edit a file, select it on the left, then edit on the right, and be sure to click Save
+  - To rename or copy a file, create the new file, then slect the old file, select it's contents, copy them, and then select the new file and paste the content into it and save. 
+  - To delete a file, right click it and select Delete.
+- Can connect to local WiFi router by adding a file (can create in onboard editor) called wifi.txt with the routers wifi SSID (name) and then a ":" and the password. e.g. <tt>mywifi:mypasssword</tt>. On restart, it wll connect to local wii and take the DHCP assigned wifi address. You can find that address by monitoring the serial debug data, from the router, or using an app like advanced-ip-scanner (Windows) or fing (iOS, Android) 
+- The `loop` function in the /robot.js file can be used to add code which will be called regularly when the robot is being controlled. This is a great place to add code to read sensors, filter input, or other interesting code. 
+  
+ ## Data Flow
+  ![dataflow](https://user-images.githubusercontent.com/419392/135737811-5097d13e-1ff1-4e0d-95b7-87b00e22b9c2.png)
+  
+
+## Development Setup
 
 ### Setup the Arduino IDE (version 1 NOT version 2)
 
@@ -144,23 +162,6 @@ Some other issues related to the Arduino IDE in Ubuntu: <BR> https://goldayan.in
 
 Refer to the main branch
 
-## Additional features:
-- The USB connector prints debug data. Connect via e.g. PuTTY or screen to the com port at 115,200 baud, No parity, 8 data bits, 1 stop bit. 
-- It will also accept commands to play back animation .JSON files. e.g. <tt>/1</tt> will cause /1.JSON to play back. 
-- The onboard edior is available by adding `/edit` to the URL. 
-  <BR>![editor](https://user-images.githubusercontent.com/419392/135738555-d4a901bc-d6ba-4154-9623-ee87019079da.png)
-
-  - To create a file, enter the file name (always start with "/") then press Create.
-  - To upload a file press Upload, select the file locally, and it will be added to the robot. 
-  - To edit a file, select it on the left, then edit on the right, and be sure to click Save
-  - To rename or copy a file, create the new file, then slect the old file, select it's contents, copy them, and then select the new file and paste the content into it and save. 
-  - To delete a file, right click it and select Delete.
-- Can connect to local WiFi router by adding a file (can create in onboard editor) called wifi.txt with the routers wifi SSID (name) and then a ":" and the password. e.g. <tt>mywifi:mypasssword</tt>. On restart, it wll connect to local wii and take the DHCP assigned wifi address. You can find that address by monitoring the serial debug data, from the router, or using an app like advanced-ip-scanner (Windows) or fing (iOS, Android) 
-- The `loop` function in the /robot.js file can be used to add code which will be called regularly when the robot is being controlled. This is a great place to add code to read sensors, filter input, or other interesting code. 
-  
- ## Data Flow
-  ![dataflow](https://user-images.githubusercontent.com/419392/135737811-5097d13e-1ff1-4e0d-95b7-87b00e22b9c2.png)
-  
   
 See also:
 - Connecting servos to the NodeMCU's and connecting external battery power is much easier via this little <a href="https://hackaday.io/project/181972-massmind-rc-servo-adapter">RC Servo adapter PCB</a>
