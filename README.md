@@ -1,9 +1,11 @@
 # SDMG-Web-Bot
 
+Arduino IDE branch
+
 This is an updated version of 
-https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
+<BR> https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
 which started out as
-https://github.com/jmalins/BattleBot-Control
+<BR> https://github.com/jmalins/BattleBot-Control
 
 This new version is updated in a few "interesting" ways:
 1. It supports recording and playback of your manual control. 
@@ -16,41 +18,131 @@ The inner ,[] section can repeat as often as you like. They are saved in the fil
 2. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
 https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
 
-3. It compiles for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
-(Probably won't work under Arduino IDE without some effort). 
-The key is that the ESP32 has far more processing ower and will (eventually) support https web service which will allow access to the sensor 
-(including the camera) on the cell phone.
+3. It compiles for the ESP8266 under the Arduino IDE as setup on this branch. See the main branch for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
 
-### Web programming
+## Development
 
-You can program this with just Chrome! No IDE, no programs, no nothing. Just 
-1. download the [release files](https://github.com/JamesNewton/SDMG-Web-Bot/releases) in the "esptool.zip" archive and extract them locally.
-2. open the manifest.json file and look at the "parts" section. 
-3. go to:
-https://espressif.github.io/esptool-js/
-and check the ports, then plug in the robot to the PC. It takes a USB A to micro A cable; and that needs to be a "data" type cable, not charge only version. When connected, the servos will spin and that can be a problem, because the USB port won't supply enough power. So disconnect the servos from the board temporarily.
-When you plug in, you should see a new port show up. Select that port and connect. Don't change the baud rate. Verify it detects the chip, and loads the stub. 
-4. Copy in the offset for the first file (it takes decimal) listed in the manifest, and select the matching file. 
-5. for each following file, press Add file, copy in the offset and select the file. 
-6. Hit program, hold breath. 
-7. When complete Reset or power cycle. 
-8. Smile. (or cry and contact me for help)
+### Setup the Arduino IDE (version 1 NOT version 2)
 
-### Development
+To work on this with the Arduno IDE we can not install the 2.x version. Sadly, the latest version can't load the web files (yet) according to the Arduino Team:
+<BR> https://forum.arduino.cc/t/ide-2-1-and-spiffs/1129840/4
 
-You will need to install:
-- Platforms: "Espressif 8266" and "Espressif 32"
-- Boards: "nodemcuv2" for the NodeMCU (8266) and "node32s" for the DevKitC 
-<BR>Tested with:
-<BR><a href="https://www.amazon.com/gp/product/B081CSJV2V">"HiLetgo ESP8266 NodeMCU CP2102 ESP-12E"</a>
-<BR><a href="https://www.amazon.com/gp/product/B0718T232Z">"HiLetgo ESP-WROOM-32 ESP32 ESP-32S Development Board"</a>
-- Libraries:
-<BR>-	teckel12/NewPing@^1.9.1
-<br>-	me-no-dev/ESP Async WebServer @ ^1.2.3
-<br>- lorol/LittleFS_esp32 @ ^1.0.6
-<br>- madhephaestus/ESP32Servo @ ^0.9.0 
-(note <a href="https://github.com/madhephaestus/ESP32Servo/issues/23">issue with configuration corruption</a>)
+Also, do not install the Arduino IDE from an App center or Software center as those versions will not work correctly. 
 
+[ ] Go to the Downloads page on the Arduino website: https://www.arduino.cc/en/software#legacy-ide-18x. Scroll down to "Legacy IDE (1.8.X)".
+
+[ ] Click on the version for the Operating System (OS) on your computer from the blue-green "DOWNLOAD OPTIONS" box to the right of the "Legacy IDE (1.8.X)" heading.
+ 
+[ ] Install the program by following the instructions specific to your OS version at
+<BR> https://docs.arduino.cc/software/ide-v1. If that doesn't work, share the exact error message in the week's forum.
+On a Mac, double-click the zip file in the Finder. This will unzip to one file named “Arduino.app”. Drag the file to your Applications Folder to install it. 
+On Windows, download and run the Windows.exe, or the Windows App installer, depending on your OS version. 
+
+For more detailed instructions, view the article at 
+<BR> https://docs.arduino.cc/software/ide-v1. 
+
+[ ] Open the Arduino IDE program. Locate the Arduino IDE. 
+
+[ ] In the Arduino IDE, open Preferences. Go to File > Preferences (Windows) or Arduino > Settings (macOS).
+
+[ ] Make note of the "Sketchbook location" in the Arduino IDE File > Preferences dialog. This is the folder where your programs will go, especially the new program for the bot. It's good to write that location down or open it in your file manager by pressing "Browse".
+
+[ ] In the section called "Additional Boards Manager URLs" add:
+<BR> http://arduino.esp8266.com/stable/package_esp8266com_index.json
+<BR> by copying and pasting it from this page. 
+
+[ ] Click OK to close the Preferences dialog.
+
+[ ] Select Tools > Board > Boards Manager.
+
+[ ] In the Boards Manager dialog, replace the prompt "Filter your search…" with "ESP8266" (no need to press enter–just wait) to find the latest version (3.1.2).
+
+If you don't see that, go back and check that the URL is still installed on step 6, and that it is exactly copied.
+
+[ ] Install the "esp8266" option (Tools > Boards > Boards Manager) by clicking on the "INSTALL" button in the lower right corner of the esp8266 entry. Note that the button won't show up until you move the mouse over the entry.
+
+The progress bar along the bottom will show you when the install is finished
+
+[ ] Close the Boards Manager dialog with the Close button in the lower right. 
+
+[ ] Verify that the install worked by navigating to the menu Tools > Board menu and look for a submenu named "ESP8266".
+
+NOTE: This is not under Tools > Board > Boards Manager. It will be a new option in the list of boards under Tools > Board.
+
+If you don't see it there, re-check the steps related to the Boards Manager.
+
+[ ] Select Tools > Board > ESP 8266 Boards (3.1.2) > Node MCU v1.0 (ESP-12E module)
+
+Check by pulling down the Tools menu again; you should see many new options, including CPU Frequency and FLASH size, and Board should show "Node MCU v1.0 (ESP-12E module)".
+
+[ ] Download this file:
+<BR> https://github.com/jshaw/NewPingESP8266/archive/refs/heads/master.zip
+
+[ ] Under Sketch > Include Library > Add .zip library, go to the Downloads folder and select the master.zip file you just downloaded. 
+
+Once that finishes, you can check under Sketch > Include Library and then scroll down to ensure "NewPingESP8266-master" shows up.
+
+[ ] Go to Tools > Manage Libraries and wait for it to update. In the box to the right of Topic, type in “ESPAsyncWebSrv” to filter the list of libraries. Wait for it to display the filtered list. Click Install to install the matching entry. 
+
+If the program prompts you to install other dependencies, select Install all. If not, repeat step 17 for each of these libraries:
+- ESPAsyncTCP
+- AsyncTCP
+
+Note that another library matches the filter, but it has a different name. The important part is that the entry with the matching name says "INSTALLED" in green.
+
+### Load the SDMG Web Bot program
+
+[ ] Download this file:
+<BR> https://github.com/JamesNewton/SDMG-Web-Bot/archive/refs/heads/ArduinoIDEv1.zip 
+Extract it under that sketch folder you found earlier in the File > Preferences (Windows) or Arduino > Settings (macOS) dialog.
+
+Make sure it ends up looking like this under the Arduino sketch folder:
+
+`…Arduino/SDMG-Web-Bot/SDMG-Web-Bot.ino`
+
+[ ] Restart the Arduino IDE. e.g. Close the program, and then open it up again. The installation of the LittleFS into the tools folder should work automatically as a result.
+ 
+[ ] Check that the FS Upload add-on is working by pulling down the Tools menu and checking that "ESP8266 LittleFS Data Upload" is available. If it's not, be sure you restarted the program, and if you did, continue on to install the ESP8266FS file system upload add-on. Directions:
+<BR> https://github.com/earlephilhower/arduino-esp8266littlefs-plugin#installation 
+
+Be sure to close, and then restart the IDE (as per the installation docs). 
+ 
+[ ] And now, with a bit of luck, you can go to File > Open, browse to the sketchbook folder, and then to the bot folder under that, and open the .ino file. You should now see the program in the editor window. 
+
+[ ] Select Sketch > Verify/Compile and it might compile. If not, post any error messages you get in this week’s forum.
+
+[ ] Next we need to connect the robot to the computer, using a USB data cable (not a charging cable; if you have multiple options, use the thickest one). If the device doesn't show up in the computer, try a different cable. 
+
+NOTE: macOS users must install serial port drivers. Follow the provided instructions. The NodeMCU typically has a CP210x USB to serial chip, but to save money the manufacturer might have used a CH340 or CH341 chip. Windows will generally automatically find the driver. But if it doesn't, identify the chip on your board by looking at the markings on the chip and install the driver for it. The chip should be just in front of the USB port. Here are links to the drivers from the Manufacturers: 
+
+- CP2102, CP2104, CP2110, etc.<BR> https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads 
+
+- CH340, CH341, etc.<BR> https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all
+
+[ ] Once it's connected, in the Arduino IDE, select Tools > Port and choose the port that appears when you connect the board. It can help to unplug the bot, check the list, then plug the bot back in and re-check the list.
+
+[ ] Select Sketch > Upload and wait for a while. The progress bar will go along the right side between the editor and the message output panel. 
+
+If you get an error message about the port, check that the correct port is selected under Tools > Port. You may want to unplug and reconnect the board to see which port disappears and reappears. 
+ 
+[ ] Select Tools > ESP8266 LittleFS Data Upload and wait for the programming of the data to finish. The progress bar will go along the right side between the editor and the message output panel. 
+
+Once that's finished, you can try to connect to the bot as usual and you should find some new features on the main drive interface page. 
+
+### Known Issues (and a few solutions)
+
+On older operating systems, (e.g. Ubuntu 18, Windows 8, etc.) you might get an error when compiling like:
+```
+/home/jamesn/snap/arduino/85/.arduino15/packages/esp8266/hardware/esp8266/3.1.2/tools/mkbuildoptglobals.py
+Minimal supported version of Python is 3.7
+```
+This is because the IDE was installed from the "snap" based Ubuntu Application store, or via the snap installer in Windows. Remove it and re-install via the executable linked above directly from Arduino.cc. 
+
+Some other issues related to the Arduino IDE in Ubuntu: <BR> https://goldayan.in/blog/iot_starter/ 
+
+## Platform IO
+
+Refer to the main branch
 
 ## Additional features:
 - The USB connector prints debug data. Connect via e.g. PuTTY or screen to the com port at 115,200 baud, No parity, 8 data bits, 1 stop bit. 
