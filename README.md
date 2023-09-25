@@ -4,7 +4,7 @@ Arduino IDE branch
 
 This is an updated version of 
 <BR> https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
-which started out as
+<BR> which started out as
 <BR> https://github.com/jmalins/BattleBot-Control
 
 This new version is updated in a few "interesting" ways:
@@ -35,8 +35,8 @@ Also, do not install the Arduino IDE from an App center or Software center as th
  
 [ ] Install the program by following the instructions specific to your OS version at
 <BR> https://docs.arduino.cc/software/ide-v1. If that doesn't work, share the exact error message in the week's forum.
-On a Mac, double-click the zip file in the Finder. This will unzip to one file named “Arduino.app”. Drag the file to your Applications Folder to install it. 
-On Windows, download and run the Windows.exe, or the Windows App installer, depending on your OS version. 
+- On a Mac, double-click the zip file in the Finder. This will unzip to one file named “Arduino.app”. Drag the file to your Applications Folder to install it. 
+- On Windows, download and run the Windows.exe, or the Windows App installer, depending on your OS version. 
 
 For more detailed instructions, view the article at 
 <BR> https://docs.arduino.cc/software/ide-v1. 
@@ -94,7 +94,7 @@ Note that another library matches the filter, but it has a different name. The i
 
 [ ] Download this file:
 <BR> https://github.com/JamesNewton/SDMG-Web-Bot/archive/refs/heads/ArduinoIDEv1.zip 
-Extract it under that sketch folder you found earlier in the File > Preferences (Windows) or Arduino > Settings (macOS) dialog.
+<BR> Extract it under that sketch folder you found earlier in the File > Preferences (Windows) or Arduino > Settings (macOS) dialog.
 
 Make sure it ends up looking like this under the Arduino sketch folder:
 
@@ -140,7 +140,7 @@ This is because the IDE was installed from the "snap" based Ubuntu Application s
 
 Some other issues related to the Arduino IDE in Ubuntu: <BR> https://goldayan.in/blog/iot_starter/ 
 
-## Platform IO
+### Platform IO
 
 Refer to the main branch
 
