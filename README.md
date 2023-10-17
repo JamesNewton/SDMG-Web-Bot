@@ -17,9 +17,10 @@ The inner ,[] section can repeat as often as you like. They are saved in the fil
 https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
 
 3. It compiles for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
-(Probably won't work under Arduino IDE without some effort). 
-The key is that the ESP32 has far more processing ower and will (eventually) support https web service which will allow access to the sensor 
-(including the camera) on the cell phone.
+And under Arduino IDE without some effort; see the <a href="https://github.com/JamesNewton/SDMG-Web-Bot/tree/ArduinoIDEv1">ArduinoIDEv1</A> branch. 
+The key is that the ESP32 has far more processing ower and will (eventually) support https web service which may allow access to the sensor 
+(including the camera) on the cell phone. <a href="https://hackaday.io/project/184720-web-smart-phone-screen-blink-bot">Another method of getting access
+to phone sensors is in the works</a>.
 
 ### Web programming
 
