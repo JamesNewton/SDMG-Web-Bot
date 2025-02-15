@@ -24,7 +24,7 @@ to phone sensors is in the works</a>.
 
 ### Web programming
 
-You can program this with just Chrome! No IDE, no programs, no nothing. Just 
+You can program this with just Chrome! (at least for the ESP32, the 8266 does't seem to work) No IDE, no programs, no nothing. Just 
 1. download the [release files](https://github.com/JamesNewton/SDMG-Web-Bot/releases) in the "esptool.zip" archive and extract them locally.
 2. open the manifest.json file and look at the "parts" section. 
 3. go to:
