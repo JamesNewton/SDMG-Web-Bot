@@ -81,5 +81,4 @@ You will need to install:
 - <a href="https://www.sdmakersguild.org/steambot-build-day-at-gaslight-gathering-april-13-2019/">Steampunk version</a> built at <a href="http://gaslightgathering.org/">Gaslight Gathering 2019</a> (also 2021)
 - https://www.youtube.com/watch?v=SbmjmV-a6yE demo of the ping sensor working
 - https://youtu.be/kWHx6a_4-iI?t=1523 Presentation about the bot for the Seattle Robotics Society
-
-    
+- https://hackaday.io/project/184720-web-smart-phone-screen-blink-bot This crazy idea will be the focus of future development, as it allows us to use a cell phone as the _onboard_ brains of the robot!!! It communicates via optical isolated connection for safety, and leave the wifi or even cell phone data connection of the phone free to access web services or enable tele-op. Development is easily done from your PC and updates are OTA and secure via the phones web browser; no app to install! It's just a web page. 
