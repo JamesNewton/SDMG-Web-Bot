@@ -1,6 +1,6 @@
 # SDMG-Web-Bot
 
-This is an updated version of 
+[This](https://github.com/JamesNewton/SDMG-Web-Bot) is an updated version of 
 https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
 which started out as
 https://github.com/jmalins/BattleBot-Control
