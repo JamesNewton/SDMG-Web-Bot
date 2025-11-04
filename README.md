@@ -1,6 +1,6 @@
 # SDMG-Web-Bot
 
-Arduino IDE branch
+[Arduino IDE branch](https://github.com/JamesNewton/SDMG-Web-Bot/blob/ArduinoIDEv1) [Main branch](https://github.com/JamesNewton/SDMG-Web-Bot)
 
 This is an updated version of 
 <BR> https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
