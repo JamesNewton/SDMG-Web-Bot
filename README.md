@@ -33,8 +33,8 @@ The inner ,[] section can repeat as often as you like. They are saved in the fil
   - To delete a file, right click it and select Delete.
 - Can connect to local WiFi router by adding a file (can create in onboard editor) called wifi.txt with the routers wifi SSID (name) and then a ":" and the password. e.g. <tt>mywifi:mypasssword</tt>. On restart, it wll connect to local wii and take the DHCP assigned wifi address. You can find that address by monitoring the serial debug data, from the router, or using an app like advanced-ip-scanner (Windows) or fing (iOS, Android) 
 - The `loop` function in the /robot.js file can be used to add code which will be called regularly when the robot is being controlled. This is a great place to add code to read sensors, filter input, or other interesting code. 
-  
- ## Data Flow
+
+## Data Flow
  
 ![dataflow](https://user-images.githubusercontent.com/419392/135737811-5097d13e-1ff1-4e0d-95b7-87b00e22b9c2.png)
   
