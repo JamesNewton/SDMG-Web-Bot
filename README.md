@@ -3,9 +3,9 @@
 [Arduino IDE branch](https://github.com/JamesNewton/SDMG-Web-Bot/blob/ArduinoIDEv1) [Main branch](https://github.com/JamesNewton/SDMG-Web-Bot)
 
 This is an updated version of 
-<BR> https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
+<BR> [https://github.com/JamesNewton/BattleBot-Control/tree/patch-2](https://github.com/JamesNewton/BattleBot-Control/tree/patch-2)
 <BR> which started out as
-<BR> https://github.com/jmalins/BattleBot-Control
+<BR> [https://github.com/jmalins/BattleBot-Control](https://github.com/jmalins/BattleBot-Control)
 
 This new version is updated in a few "interesting" ways:
 1. It supports recording and playback of your manual control. 
@@ -19,7 +19,7 @@ The inner ,[] section can repeat as often as you like. They are saved in the fil
 2. It compiles for the ESP8266 under the Arduino IDE as setup on this branch. See the main branch for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
 
 3. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
-https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
+[https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup](https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup)
 
 - The USB connector prints debug data. Connect via e.g. PuTTY or screen to the com port at 115,200 baud, No parity, 8 data bits, 1 stop bit. 
 - It will also accept commands to play back animation .JSON files. e.g. <tt>/1</tt> will cause /1.JSON to play back. 
@@ -35,29 +35,29 @@ https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
 - The `loop` function in the /robot.js file can be used to add code which will be called regularly when the robot is being controlled. This is a great place to add code to read sensors, filter input, or other interesting code. 
   
  ## Data Flow
-  ![dataflow](https://user-images.githubusercontent.com/419392/135737811-5097d13e-1ff1-4e0d-95b7-87b00e22b9c2.png)
+ 
+![dataflow](https://user-images.githubusercontent.com/419392/135737811-5097d13e-1ff1-4e0d-95b7-87b00e22b9c2.png)
   
-
 ## Development Setup
 
 ### Setup the Arduino IDE (version 1 NOT version 2)
 
 To work on this with the Arduno IDE we can not install the 2.x version. Sadly, the latest version can't load the web files (yet) according to the Arduino Team:
-<BR> https://forum.arduino.cc/t/ide-2-1-and-spiffs/1129840/4
+<BR> [https://forum.arduino.cc/t/ide-2-1-and-spiffs/1129840/4](https://forum.arduino.cc/t/ide-2-1-and-spiffs/1129840/4)
 
 Also, do not install the Arduino IDE from an App center or Software center as those versions will not work correctly. 
 
-[ ] Go to the Downloads page on the Arduino website: https://www.arduino.cc/en/software#legacy-ide-18x. Scroll down to "Legacy IDE (1.8.X)".
+[ ] Go to the Downloads page on the Arduino website: [https://www.arduino.cc/en/software#legacy-ide-18x](https://www.arduino.cc/en/software#legacy-ide-18x). Scroll down to "Legacy IDE (1.8.X)".
 
 [ ] Click on the version for the Operating System (OS) on your computer from the blue-green "DOWNLOAD OPTIONS" box to the right of the "Legacy IDE (1.8.X)" heading.
  
 [ ] Install the program by following the instructions specific to your OS version at
-<BR> https://docs.arduino.cc/software/ide-v1. If that doesn't work, share the exact error message in the week's forum.
+<BR> [https://docs.arduino.cc/software/ide-v1](https://docs.arduino.cc/software/ide-v1). If that doesn't work, share the exact error message in the week's forum.
 - On a Mac, double-click the zip file in the Finder. This will unzip to one file named “Arduino.app”. Drag the file to your Applications Folder to install it. 
 - On Windows, download and run the Windows.exe, or the Windows App installer, depending on your OS version. 
 
 For more detailed instructions, view the article at 
-<BR> https://docs.arduino.cc/software/ide-v1. 
+<BR> [https://docs.arduino.cc/software/ide-v1](https://docs.arduino.cc/software/ide-v1). 
 
 [ ] Open the Arduino IDE program. Locate the Arduino IDE. 
 
@@ -66,7 +66,7 @@ For more detailed instructions, view the article at
 [ ] Make note of the "Sketchbook location" in the Arduino IDE File > Preferences dialog. This is the folder where your programs will go, especially the new program for the bot. It's good to write that location down or open it in your file manager by pressing "Browse".
 
 [ ] In the section called "Additional Boards Manager URLs" add:
-<BR> http://arduino.esp8266.com/stable/package_esp8266com_index.json
+<BR> [http://arduino.esp8266.com/stable/package_esp8266com_index.json](http://arduino.esp8266.com/stable/package_esp8266com_index.json)
 <BR> by copying and pasting it from this page. 
 
 [ ] Click OK to close the Preferences dialog.
@@ -94,7 +94,7 @@ If you don't see it there, re-check the steps related to the Boards Manager.
 Check by pulling down the Tools menu again; you should see many new options, including CPU Frequency and FLASH size, and Board should show "Node MCU v1.0 (ESP-12E module)".
 
 [ ] Download this file:
-<BR> https://github.com/jshaw/NewPingESP8266/archive/refs/heads/master.zip
+<BR> [https://github.com/jshaw/NewPingESP8266/archive/refs/heads/master.zip](https://github.com/jshaw/NewPingESP8266/archive/refs/heads/master.zip)
 
 [ ] Under Sketch > Include Library > Add .zip library, go to the Downloads folder and select the master.zip file you just downloaded. 
 
@@ -111,7 +111,7 @@ Note that another library matches the filter, but it has a different name. The i
 ### Load the SDMG Web Bot program
 
 [ ] Download this file:
-<BR> https://github.com/JamesNewton/SDMG-Web-Bot/archive/refs/heads/ArduinoIDEv1.zip 
+<BR> [https://github.com/JamesNewton/SDMG-Web-Bot/archive/refs/heads/ArduinoIDEv1.zip](https://github.com/JamesNewton/SDMG-Web-Bot/archive/refs/heads/ArduinoIDEv1.zip) 
 <BR> Extract it under that sketch folder you found earlier in the File > Preferences (Windows) or Arduino > Settings (macOS) dialog.
 
 Make sure it ends up looking like this under the Arduino sketch folder:
@@ -121,7 +121,7 @@ Make sure it ends up looking like this under the Arduino sketch folder:
 [ ] Restart the Arduino IDE. e.g. Close the program, and then open it up again. The installation of the LittleFS into the tools folder should work automatically as a result.
  
 [ ] Check that the FS Upload add-on is working by pulling down the Tools menu and checking that "ESP8266 LittleFS Data Upload" is available. If it's not, be sure you restarted the program, and if you did, continue on to install the ESP8266FS file system upload add-on. Directions:
-<BR> https://github.com/earlephilhower/arduino-esp8266littlefs-plugin#installation 
+<BR> [https://github.com/earlephilhower/arduino-esp8266littlefs-plugin#installation](https://github.com/earlephilhower/arduino-esp8266littlefs-plugin#installation) 
 
 Be sure to close, and then restart the IDE (as per the installation docs). 
  
@@ -133,9 +133,9 @@ Be sure to close, and then restart the IDE (as per the installation docs).
 
 NOTE: macOS users must install serial port drivers. Follow the provided instructions. The NodeMCU typically has a CP210x USB to serial chip, but to save money the manufacturer might have used a CH340 or CH341 chip. Windows will generally automatically find the driver. But if it doesn't, identify the chip on your board by looking at the markings on the chip and install the driver for it. The chip should be just in front of the USB port. Here are links to the drivers from the Manufacturers: 
 
-- CP2102, CP2104, CP2110, etc.<BR> https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads 
+- CP2102, CP2104, CP2110, etc.<BR> [https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads) 
 
-- CH340, CH341, etc.<BR> https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all
+- CH340, CH341, etc.<BR> [https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all](https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all)
 
 [ ] Once it's connected, in the Arduino IDE, select Tools > Port and choose the port that appears when you connect the board. It can help to unplug the bot, check the list, then plug the bot back in and re-check the list.
 
@@ -156,7 +156,7 @@ Minimal supported version of Python is 3.7
 ```
 This is because the IDE was installed from the "snap" based Ubuntu Application store, or via the snap installer in Windows. Remove it and re-install via the executable linked above directly from Arduino.cc. 
 
-Some other issues related to the Arduino IDE in Ubuntu: <BR> https://goldayan.in/blog/iot_starter/ 
+Some other issues related to the Arduino IDE in Ubuntu: <BR> [https://goldayan.in/blog/iot_starter/](https://goldayan.in/blog/iot_starter/) 
 
 ### Platform IO
 
@@ -171,7 +171,7 @@ See also:
 - Class on <a href="https://jamesnewton.github.io/class/presentESP8266blink.html#1">Arduino (esp)</a>, <a href="https://jamesnewton.github.io/class/presentESP8266servo.html#1">Servos</a>, and <a href="https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#battlebot-control-servo">the Bot</a> at SDCoLab 2019
 - <a href="https://goo.gl/photos/vmKWgHmUPouctquz8">Images / Videos of the "Cardboard Combat" origins</a> with <a href="https://www.sdmakersguild.org/events/cardboard-combat-bots/">San Diego Makers Guild</a>
 - <a href="https://www.sdmakersguild.org/steambot-build-day-at-gaslight-gathering-april-13-2019/">Steampunk version</a> built at <a href="http://gaslightgathering.org/">Gaslight Gathering 2019</a> (also 2021)
-- https://www.youtube.com/watch?v=SbmjmV-a6yE demo of the ping sensor working
-- https://youtu.be/kWHx6a_4-iI?t=1523 Presentation about the bot for the Seattle Robotics Society
+- [https://www.youtube.com/watch?v=SbmjmV-a6yE](https://www.youtube.com/watch?v=SbmjmV-a6yE) demo of the ping sensor working
+- [https://youtu.be/kWHx6a_4-iI?t=1523](https://youtu.be/kWHx6a_4-iI?t=1523) Presentation about the bot for the Seattle Robotics Society
 
     
