@@ -55,6 +55,9 @@ long lastping;
 
 // set to true to print commands to the serial monitor for debugging //
 #define PRINT_TO_SERIAL_MONITOR  false
+#define DBG_OUTPUT_PORT Serial
+#define DBG_BAUD_RATE   115200
+
 
 //Trim servos
 #define TRIM_ADJ 10
@@ -78,15 +81,12 @@ int playdo;
 // function prototypes //
 void enterState(RobotState);
 void runStateMachine(void);
-void updateHardware(String);
+void updateHardware(const char*);
 bool getWiFiForceAPMode();
 void setWheelPower(int,int);
 void setWeaponPower(int);
 void webSocketMessage(String);
 void setStatusLED(bool);
-
-#define DBG_OUTPUT_PORT Serial
-#define DBG_BAUD_RATE   115200
 
 /********************************************************************************
  * WiFi Setup                                                                   *
@@ -282,6 +282,8 @@ void handleControlPut(AsyncWebServerRequest *request) {
 
 // websocket server instance //
 AsyncWebSocketClient *_activeClient;
+volatile bool newCommandAvailable = false;
+char incomingCmdBuffer[32] = {0};
 
 void onWSEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
   switch(type) {
@@ -306,24 +308,21 @@ void onWSEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
       enterState(STATE_IDLE);
       break;
     case WS_EVT_ERROR:
-      DBG_OUTPUT_PORT.printf("ws[%s][%u] error(%u): %s\n", server->url(), client->id(), *((uint16_t*) arg), (char*) data);
+      DBG_OUTPUT_PORT.printf("ws[%s][%u] error(%u)\n", server->url(), client->id(), *((uint16_t*) arg));
       break;
     case WS_EVT_PONG:
-      DBG_OUTPUT_PORT.printf("ws[%s][%u] pong[%u]: %s\n", server->url(), client->id(), len, (len)? (char*)data: "");
+      DBG_OUTPUT_PORT.printf("ws[%s][%u] pong[%u]\n", server->url(), client->id(), len);
       break;
     case WS_EVT_DATA:
       AwsFrameInfo * info = (AwsFrameInfo*) arg;
       // only handle a single data packet, for now //
       if(info->final && info->index == 0 && info->len == len) {
         if(info->opcode == WS_TEXT) {
-          data[len] = 0;
-          //DBG_OUTPUT_PORT.printf("[%u] command: %s\n", client->id(), data);
-          {
-            enterState(STATE_DRIVING_WITH_TIMEOUT);
-  
-            String cmd((char *) data);
-            updateHardware(cmd);
-          }
+          // Store command safely; DO NOT update hardware from the network thread
+          size_t copyLen = (len < sizeof(incomingCmdBuffer) - 1) ? len : sizeof(incomingCmdBuffer) - 1;
+          memcpy(incomingCmdBuffer, data, copyLen);
+          incomingCmdBuffer[copyLen] = '\0'; 
+          newCommandAvailable = true;
         }
       }
       break;
@@ -433,6 +432,93 @@ void setWeaponPower(int power) {
   weaponESC.writeMicroseconds(usec);
 }
 
+
+/********************************************************************************
+ * Parsing & Interpolation Engine                                               *
+ ********************************************************************************/
+
+#define MAX_CHANNELS 8
+#define INTERP_INTERVAL_MS 50
+
+int parsedValues[MAX_CHANNELS];
+int parsedCount = 0;
+
+float currentChannels[3] = {0, 0, 0}; // 0:left, 1:right, 2:weapon
+int startChannels[3] = {0, 0, 0};
+int targetChannels[3] = {0, 0, 0};
+
+unsigned long interpStartTime = 0;
+unsigned long interpDuration = 0;
+unsigned long lastInterpUpdate = 0;
+
+// General purpose string parser (Pure C, zero heap allocation)
+void parseIntegers(const char* input, char separator = ':') {
+    parsedCount = 0;
+    const char* ptr = input;
+    char* endPtr;
+    
+    while (*ptr != '\0' && parsedCount < MAX_CHANNELS) {
+        parsedValues[parsedCount++] = strtol(ptr, &endPtr, 10);
+        
+        if (*endPtr == separator) {
+            ptr = endPtr + 1; // Move past the separator
+        } else {
+            break; // Reached the end or a non-separator character
+        }
+    }
+}
+
+// Sets new hardware targets. Sweeps if duration > 50ms, otherwise snaps immediately.
+void setTargets(int left, int right, int weapon, unsigned long duration) {
+    targetChannels[0] = left;
+    targetChannels[1] = right;
+    targetChannels[2] = weapon;
+
+    if (duration <= INTERP_INTERVAL_MS) {
+        // Immediate snap for real-time websocket control or very short delays
+        currentChannels[0] = left;
+        currentChannels[1] = right;
+        currentChannels[2] = weapon;
+        setWheelPower(left, right);
+        setWeaponPower(weapon);
+        interpDuration = 0; 
+    } else {
+        // Prepare variables for the sweep
+        startChannels[0] = currentChannels[0];
+        startChannels[1] = currentChannels[1];
+        startChannels[2] = currentChannels[2];
+        interpStartTime = millis();
+        interpDuration = duration;
+    }
+}
+
+// Drives the interpolation step (must be called continuously in loop)
+void handleInterpolation() {
+    if (interpDuration > 0) {
+        unsigned long now = millis();
+        if (now - lastInterpUpdate >= INTERP_INTERVAL_MS) {
+            lastInterpUpdate = now;
+            unsigned long elapsed = now - interpStartTime;
+
+            if (elapsed >= interpDuration) {
+                // Sweep finished
+                for(int i = 0; i < 3; i++) currentChannels[i] = targetChannels[i];
+                interpDuration = 0; 
+            } else {
+                // Calculate intermediate positions
+                float progress = (float)elapsed / interpDuration;
+                for(int i = 0; i < 3; i++) {
+                    currentChannels[i] = startChannels[i] + (targetChannels[i] - startChannels[i]) * progress;
+                }
+            }
+            
+            // Push calculated values to hardware
+            setWheelPower((int)currentChannels[0], (int)currentChannels[1]);
+            setWeaponPower((int)currentChannels[2]);
+        }
+    }
+}
+
 // interpret a command string //
 //  format: "${leftPower}:${rightPower}(:${weaponPower})?"
 //
@@ -441,18 +527,15 @@ void setWeaponPower(int power) {
 //          weaponPower - int [-1023, 1023] (optional)
 //
 //  positive values are forward 
-void updateHardware(String cmd) {
-    int index = cmd.indexOf(":"), index2 = cmd.indexOf(":", index + 1);
-    int leftPower  = cmd.substring(0, index).toInt();
-    int rightPower = (index2 >= 0)? 
-      cmd.substring(index + 1, index2).toInt(): 
-      cmd.substring(index + 1).toInt();  
-    int weaponPower = (index2 >= 0)? 
-      cmd.substring(index2 + 1).toInt(): 
-      0;
+void updateHardware(const char* cmd) {
+    parseIntegers(cmd, ':');
     
-    setWheelPower(leftPower, rightPower);
-    setWeaponPower(weaponPower);
+    int leftPower   = (parsedCount > 0) ? parsedValues[0] : 0;
+    int rightPower  = (parsedCount > 1) ? parsedValues[1] : 0;
+    int weaponPower = (parsedCount > 2) ? parsedValues[2] : 0;
+    
+    // Snap immediately for real-time control (duration = 0)
+    setTargets(leftPower, rightPower, weaponPower, 0);
 }
 
 /********************************************************************************
@@ -557,8 +640,8 @@ AsyncWebSocket ws("/ws");
 // set a message to the active web socket //
 // used for heartbeat to client app       //
 void webSocketMessage(String msg) {
+  if(!_activeClient || _activeClient->queueIsFull()) return;
   lastping = sonar.ping_cm();
-  if(!_activeClient) return;
   //DBG_OUTPUT_PORT.println(String(lastping));
   msg = "{\"msg\":\"" + msg + "\""
     + ",\"cm\":" + String(lastping) 
@@ -571,6 +654,7 @@ void webSocketMessage(String msg) {
   //DBG_OUTPUT_PORT.printf("[%u] msg: %s\n", _activeClient->id(), msg.c_str());
   _activeClient->text(msg.c_str());
   }
+
 void setup(void){
   // configure debug serial port //
   DBG_OUTPUT_PORT.begin(DBG_BAUD_RATE);
@@ -640,6 +724,12 @@ void setup(void){
 unsigned long playbackDelay;
 unsigned long playbackSpeed;
 void loop(void){
+  if (newCommandAvailable) {
+    newCommandAvailable = false; // clear flag first
+    enterState(STATE_DRIVING_WITH_TIMEOUT);
+    updateHardware(incomingCmdBuffer);
+  }
+  handleInterpolation();
   int i;
   if (Serial.available() > 0) {
     String body = Serial.readString();
@@ -680,7 +770,11 @@ void loop(void){
         }
         if (i > 0) {
           DBG_OUTPUT_PORT.println(playback.substring(0,i));
-          updateHardware(playback.substring(0,i));
+          parseIntegers(playback.substring(0,i).c_str(), ':');
+          int left   = (parsedCount > 0) ? parsedValues[0] : 0;
+          int right  = (parsedCount > 1) ? parsedValues[1] : 0;
+          int weapon = (parsedCount > 2) ? parsedValues[2] : 0;
+          setTargets(left, right, weapon, playbackSpeed);
           playback.remove(0,i+1);
           i = playback.indexOf('['); //find next record
           if (i > 0) {playback.remove(0,i);} //skip crap 
