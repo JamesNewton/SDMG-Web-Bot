@@ -348,8 +348,11 @@ void onWSEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
 // use D5 for WIFI override //
 #define PIN_WIFI_AP_MODE  PIN_D5
 
-#define ESC_MIN_USEC    1000 //400
-#define ESC_MAX_USEC    2000 //2400
+enum WeaponType { WEAPON_SERVO, WEAPON_PWM };
+
+WeaponType weaponType = WEAPON_SERVO; // Default to Servo/ESC
+int weaponMinUs = 1000;               // Default minimum microseconds
+int weaponMaxUs = 2000;               // Default maximum microseconds
 
 Servo weaponESC;
 Servo leftWheel;
@@ -358,8 +361,65 @@ Servo rightWheel;
 //NewPingESP8266 sonar(PIN_PING, PIN_ECHO, MAX_DISTANCE); //Arduino IDE
 NewPing sonar(PIN_PING, PIN_ECHO, MAX_DISTANCE); //platformIO
 
+void loadConfig() {
+  if (!SPIFFS.exists("/config.ini")) {
+    DBG_OUTPUT_PORT.println("No config.ini found. Using defaults.");
+    return;
+  }
+
+  File file = SPIFFS.open("/config.ini", "r");
+  if (!file) return;
+
+  bool inWeaponSection = false;
+
+  while (file.available()) {
+    String line = file.readStringUntil('\n');
+    line.trim();
+
+    // Skip empty lines and comments
+    if (line.length() == 0 || line.startsWith(";") || line.startsWith("#")) continue;
+
+    // Check for [sections]
+    if (line.startsWith("[") && line.endsWith("]")) {
+      // Are we entering the [weapon] section?
+      inWeaponSection = line.equalsIgnoreCase("[weapon]");
+      continue;
+    }
+
+    // Parse key=value pairs if we are currently inside [weapon]
+    if (inWeaponSection) {
+      int eqIndex = line.indexOf('=');
+      if (eqIndex > 0) {
+        String key = line.substring(0, eqIndex);
+        String val = line.substring(eqIndex + 1);
+        key.trim();
+        val.trim();
+        key.toLowerCase(); // Normalize key to lowercase for easy matching
+
+        if (key == "type") {
+          val.toUpperCase();
+          // Allow for a few intuitive keywords
+          if (val == "PWM" || val == "LASER" || val == "DC") {
+            weaponType = WEAPON_PWM;
+          } else {
+            weaponType = WEAPON_SERVO;
+          }
+        } else if (key == "minus") {
+          weaponMinUs = val.toInt();
+        } else if (key == "maxus") {
+          weaponMaxUs = val.toInt();
+        }
+      }
+    }
+  }
+  file.close();
+  
+  DBG_OUTPUT_PORT.printf("Config Loaded -> Weapon Type: %d, Min: %d, Max: %d\n", weaponType, weaponMinUs, weaponMaxUs);
+}
+
 // configure the hardware //
 void setupHardware() {
+  loadConfig();
   lastping = 0;
   leftTrim = 0;
   rightTrim = 0;
@@ -380,8 +440,14 @@ void setupHardware() {
   // WiFi override //
   pinMode(PIN_WIFI_AP_MODE, INPUT_PULLUP);
 
-  weaponESC.attach(PIN_WEAPON_ESC);
-  weaponESC.writeMicroseconds(ESC_MIN_USEC);
+  if (weaponType == WEAPON_SERVO) {
+    weaponESC.attach(PIN_WEAPON_ESC);
+    weaponESC.writeMicroseconds(weaponMinUs);
+  } else {
+    // Setup for standard PWM (Lasers, DC Motors)
+    pinMode(PIN_WEAPON_ESC, OUTPUT);
+    analogWrite(PIN_WEAPON_ESC, 0); 
+  }
 }
 
 
@@ -422,14 +488,21 @@ void setWheelPower(int left, int right) {
 
 }
 
-
 // set the weapon power //
 void setWeaponPower(int power) {  
   if(PRINT_TO_SERIAL_MONITOR) {
     DBG_OUTPUT_PORT.printf(", weapon: %d\n", power);
   }
-  int usec = map(power, 0, 1023, ESC_MIN_USEC, ESC_MAX_USEC);
-  weaponESC.writeMicroseconds(usec);
+  
+  if (weaponType == WEAPON_SERVO) {
+    // Send 50Hz RC pulse mapped to custom limits
+    int usec = map(power, 0, 1023, weaponMinUs, weaponMaxUs);
+    weaponESC.writeMicroseconds(usec);
+  } else {
+    // Send raw, high-frequency 0-100% duty cycle PWM
+    // (ESP8266 analogWrite accepts 0-1023 by default, exactly matching your power input)
+    analogWrite(PIN_WEAPON_ESC, power); 
+  }
 }
 
 
