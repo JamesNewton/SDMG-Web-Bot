@@ -451,6 +451,25 @@ unsigned long interpStartTime = 0;
 unsigned long interpDuration = 0;
 unsigned long lastInterpUpdate = 0;
 
+int playbackIndex = -1;
+unsigned long playbackDelay;
+unsigned long playbackSpeed;
+
+// Helper to start or instantly restart the pointer
+void initPlaybackPointer() {
+    playbackIndex = 0;
+    // Skip opening bracket if present
+    if (playback.length() > 0 && playback.charAt(0) == '[') {
+        playbackIndex = 1;
+    }
+    // Read the master delay speed
+    playbackSpeed = playback.substring(playbackIndex).toInt();
+    
+    // Jump the pointer to the very first data block
+    playbackIndex = playback.indexOf('[', playbackIndex);
+    playbackDelay = 0;
+}
+
 // General purpose string parser (Pure C, zero heap allocation)
 void parseIntegers(const char* input, char separator = ':') {
     parsedCount = 0;
@@ -722,8 +741,6 @@ void setup(void){
   enterState(STATE_IDLE);
 }
 
-unsigned long playbackDelay;
-unsigned long playbackSpeed;
 void loop(void){
   if (newCommandAvailable) {
     newCommandAvailable = false; // clear flag first
@@ -731,7 +748,6 @@ void loop(void){
     updateHardware(incomingCmdBuffer);
   }
   handleInterpolation();
-  int i;
   if (Serial.available() > 0) {
     String body = Serial.readStringUntil('\n');
     DBG_OUTPUT_PORT.println(body);
@@ -740,50 +756,60 @@ void loop(void){
       } else { DBG_OUTPUT_PORT.println("not found"); }
     }
   if (playfile) {
-      playback = playfile.readString();
-      playfile.close();
-      if ('[' == playback.charAt(0)) {
-        playback.remove(0,1);
-        }
-      playbackSpeed = playback.toInt();
-      i = playback.indexOf('[');
-      playback.remove(0,i);
-      DBG_OUTPUT_PORT.println("Play");
-      playbackDelay = 0;
-    };
-  if (playback.length() > 0) {
+    playback = playfile.readString();
+    playfile.close();
+    initPlaybackPointer();
+    DBG_OUTPUT_PORT.println("Play");
+    }
+  if (playback.length() > 0 && playbackIndex >= 0) {
     delay(1);
     if (millis() > playbackDelay) {
       playbackDelay = millis() + playbackSpeed;
-      // send heartbeat back to client during playback every 500ms //
       webSocketMessage("playback");
       DBG_OUTPUT_PORT.println(".");
-      if ('[' == playback.charAt(0)) {
-        playback.remove(0,1);
-        int i = playback.indexOf(']');
-        int j = playback.indexOf(',');
-        if (i>0 && j>0 && j < i) {
-          playbackSpeed = playback.toInt();
-          playback.remove(0,j+1);
-          i -= j+1;
+      
+      if (playback.charAt(playbackIndex) == '[') {
+        playbackIndex++; // Step past the '['
+        
+        int endBracket = playback.indexOf(']', playbackIndex);
+        int nextComma = playback.indexOf(',', playbackIndex);
+        
+        // If there's a comma BEFORE the closing bracket, it's a new speed modifier!
+        if (endBracket > 0 && nextComma > 0 && nextComma < endBracket) {
+          playbackSpeed = playback.substring(playbackIndex, nextComma).toInt();
+          playbackIndex = nextComma + 1; // Step past the comma
           DBG_OUTPUT_PORT.print("t:");
           DBG_OUTPUT_PORT.println(playbackSpeed);
         }
-        if (i > 0) {
-          DBG_OUTPUT_PORT.println(playback.substring(0,i));
-          parseIntegers(playback.substring(0,i).c_str(), ':');
+        
+        if (endBracket > 0) {
+          // Extract just the target numbers (e.g. "400:500:600")
+          String record = playback.substring(playbackIndex, endBracket);
+          DBG_OUTPUT_PORT.println(record);
+          
+          // Parse and send to interpolation engine
+          parseIntegers(record.c_str(), ':');
           int left   = (parsedCount > 0) ? parsedValues[0] : 0;
           int right  = (parsedCount > 1) ? parsedValues[1] : 0;
           int weapon = (parsedCount > 2) ? parsedValues[2] : 0;
           setTargets(left, right, weapon, playbackSpeed);
-          playback.remove(0,i+1);
-          i = playback.indexOf('['); //find next record
-          if (i > 0) {playback.remove(0,i);} //skip crap 
+          
+          // Leapfrog to the next record
+          playbackIndex = playback.indexOf('[', endBracket); 
+          
+          // Did we hit the end of the file?
+          if (playbackIndex == -1) {
+            if (playdo == 1 && !SPIFFS.exists("1.json")) { 
+              // Finished 0.json and no 1.json exists. Instantly rewind the pointer to loop seamlessly!
+              initPlaybackPointer();
+            } else {
+              // Not the looping file. Clear string to let runStateMachine() load the next one.
+              playback = ""; 
+            }
           }
-        else { playback = ""; }
-        }
-      else { playback = ""; }
-      }
+        } else { playback = ""; } // Malformed bracket
+      } else { playback = ""; } // Malformed string
     }
+  }
   else { runStateMachine(); }
 }
