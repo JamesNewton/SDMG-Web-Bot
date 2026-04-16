@@ -660,7 +660,8 @@ void setup(void){
   DBG_OUTPUT_PORT.begin(DBG_BAUD_RATE);
   DBG_OUTPUT_PORT.print("\n");
   DBG_OUTPUT_PORT.setDebugOutput(true);
-
+  Serial.setTimeout(10);
+  
   playdo=0;
   
   enterState(STATE_SETUP);
@@ -732,7 +733,7 @@ void loop(void){
   handleInterpolation();
   int i;
   if (Serial.available() > 0) {
-    String body = Serial.readString();
+    String body = Serial.readStringUntil('\n');
     DBG_OUTPUT_PORT.println(body);
     if(SPIFFS.exists(body+".json")) {
       playfile = SPIFFS.open(body+".json", "r");
