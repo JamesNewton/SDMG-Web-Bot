@@ -8,25 +8,41 @@ Circle Motion: Enter desired values, press "calc", then copy the generated motio
 <input type="text" name="speed" size=4 value="50" > Speed (ms between steps)<br>
 <input type="text" name="width" size=4 value="500" > Width
 <input type="text" name="height" size=4 value="500" > Height
-<br><input type="text" name="cycles" size=4 value="5" > Cycles
-<br><input type="button" value="calc" onclick="calc(this.form.height.value, this.form.width.value, this.form.speed.value, this.form.cycles.value); return false;">
+<BR>Weapon:
+<input type="text" name="weapon1" size=4 value="0" > Start
+<input type="text" name="weapon2" size=4 value="10" > End
+<br><input type="text" name="cycles" size=4 value="1" > Cycles
+<br><input type="button" value="calc" onclick="
+    calc(
+        this.form.height.value, 
+        this.form.width.value, 
+        this.form.speed.value, 
+        this.form.cycles.value,
+        this.form.weapon1.value, 
+        this.form.weapon2.value 
+    ); return false;">
 </form>
 
 <div id="appDiv"></div>
 
 <script>
   // Write Javascript code!
-  function calc(h,w,s,c) {
+  function calc(h,w,s,c, w1, w2) {
 const appDiv = document.getElementById("appDiv");
-appDiv.innerHTML = `[`+s;
-
+const steps = 40
+var weapon_step = (w2 - w1)/steps
+var weapon = parseInt(w1)
+appDiv.innerHTML = `[`+s+'<BR>';
 for (var j=0; j<c; j++) {
-  for (var i=0; i<Math.PI*2; i+=Math.PI*2/20) {
+  for (var i=0; i<Math.PI*2; i+=Math.PI*2/steps) {
     appDiv.innerHTML += "[";
     appDiv.innerHTML += Math.floor(Math.sin(i)*w);
     appDiv.innerHTML += ":";
     appDiv.innerHTML += Math.floor(Math.cos(i)*h);
-    appDiv.innerHTML += ":0],<BR>";
+    appDiv.innerHTML += ":";
+    appDiv.innerHTML += Math.floor(weapon);
+    appDiv.innerHTML += "],<BR>";
+    weapon += weapon_step
   }
 }
 
