@@ -370,24 +370,24 @@ void loadConfig() {
   File file = SPIFFS.open("/config.ini", "r");
   if (!file) return;
 
-  bool inWeaponSection = false;
-
+  String section="preamble";
   while (file.available()) {
     String line = file.readStringUntil('\n');
+    line.remove(line.indexOf(';')); // Remove inline comments starting with ';'
     line.trim();
-
+    DBG_OUTPUT_PORT.println(line);
     // Skip empty lines and comments
     if (line.length() == 0 || line.startsWith(";") || line.startsWith("#")) continue;
 
     // Check for [sections]
     if (line.startsWith("[") && line.endsWith("]")) {
-      // Are we entering the [weapon] section?
-      inWeaponSection = line.equalsIgnoreCase("[weapon]");
+      line.toLowerCase();
+      section = line;
       continue;
     }
 
     // Parse key=value pairs if we are currently inside [weapon]
-    if (inWeaponSection) {
+    if (section.equals("[weapon]")) {
       int eqIndex = line.indexOf('=');
       if (eqIndex > 0) {
         String key = line.substring(0, eqIndex);
@@ -395,7 +395,7 @@ void loadConfig() {
         key.trim();
         val.trim();
         key.toLowerCase(); // Normalize key to lowercase for easy matching
-
+        DBG_OUTPUT_PORT.printf("Config: %s = %s\n", key.c_str(), val.c_str());
         if (key == "type") {
           val.toUpperCase();
           // Allow for a few intuitive keywords
@@ -404,9 +404,9 @@ void loadConfig() {
           } else {
             weaponType = WEAPON_SERVO;
           }
-        } else if (key == "minus") {
+        } else if (key == "min_us") {
           weaponMinUs = val.toInt();
-        } else if (key == "maxus") {
+        } else if (key == "max_us") {
           weaponMaxUs = val.toInt();
         }
       }
@@ -748,6 +748,8 @@ void webSocketMessage(String msg) {
   }
 
 void setup(void){
+  // give the serial port a moment to start up //
+  delay(1000);
   // configure debug serial port //
   DBG_OUTPUT_PORT.begin(DBG_BAUD_RATE);
   DBG_OUTPUT_PORT.print("\n");
@@ -759,9 +761,6 @@ void setup(void){
   enterState(STATE_SETUP);
   runStateMachine();
   
-  // configure the hardware //
-  setupHardware();
-
   // start file system //
   if (!SPIFFS.begin()) {
     DBG_OUTPUT_PORT.println("ERROR: File System");
@@ -777,6 +776,9 @@ void setup(void){
 //       }
 //     }
   }
+
+  // configure the hardware //
+  setupHardware();
 
   // start wifi //
   setupWiFi();
@@ -839,7 +841,7 @@ void loop(void){
     if (millis() > playbackDelay) {
       playbackDelay = millis() + playbackSpeed;
       webSocketMessage("playback");
-      DBG_OUTPUT_PORT.println(".");
+      //DBG_OUTPUT_PORT.println(".");
       
       if (playback.charAt(playbackIndex) == '[') {
         playbackIndex++; // Step past the '['
@@ -858,7 +860,7 @@ void loop(void){
         if (endBracket > 0) {
           // Extract just the target numbers (e.g. "400:500:600")
           String record = playback.substring(playbackIndex, endBracket);
-          DBG_OUTPUT_PORT.println(record);
+          //DBG_OUTPUT_PORT.println(record);
           
           // Parse and send to interpolation engine
           parseIntegers(record.c_str(), ':');
