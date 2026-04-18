@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // define devices and controls //
-var arcadeDrive, motorMotor;
+var arcadeDrive, weaponMotor;
 var driveStick, weaponSlider, forwardButton, reverseButton;
 var recordButton;
 
@@ -55,10 +55,24 @@ function setup () {
   //recordButton.groupName = 'recordGroup'
 
   infoBox.botStatus = {}
+
+  // --- THE SMART HEARTBEAT ---
+  // Fires an update every 100ms ONLY if the controls are active or a sensor is reading
+  setInterval(function() {
+    // Check if the joystick is off-center (give it a tiny 1% deadzone)
+    var isDriving = Math.abs(driveStick.x) > 0.01 || Math.abs(driveStick.y) > 0.01;
+    // Check if the weapon is spinning
+    var isWeaponActive = Math.abs(weaponSlider.value) > 0.01;
+    // Check if we have a valid, close-range sensor reading that needs monitoring
+    var hasValidSensor = infoBox.botStatus.cm !== undefined && infoBox.botStatus.cm > 0 && infoBox.botStatus.cm < 200;
+
+    if (isDriving || isWeaponActive || hasValidSensor) {
+      fireUpdate();
+    }
+  }, 100);
 }
 
 const tooClose = 15
-var aware = undefined 
 var playBack = ""
 var interval = 0
 var lastime = 0
@@ -67,11 +81,14 @@ var lastime = 0
 function loop () {
   //var infoBox = document.getElementById('info-box')
   var dist = infoBox.botStatus.cm
-  if (dist && !aware) aware = setInterval(fireUpdate,100) //even when not being touched, do occasional updates, which calls the loop
-  if (dist === undefined || dist < 3 || dist > 200) dist = 200
-  var avoid = (tooClose - dist) * 0.02
-  if (avoid < 0) avoid = 0
-  if (dist < tooClose) console.log(avoid, driveStick.x)
+  var avoid = 0
+  
+  // Only calculate avoidance if the sensor reading is valid and dangerously close
+  if (dist !== undefined && dist > 3 && dist < tooClose) {
+    avoid = (tooClose - dist) * 0.02
+    console.log("Avoiding obstacle:", avoid, driveStick.x)
+  }
+
   // handle driving //
   var speed = driveStick.y
   var rotation = driveStick.x + avoid
