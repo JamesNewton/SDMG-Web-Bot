@@ -5,22 +5,27 @@ https://github.com/JamesNewton/BattleBot-Control/tree/patch-2
 which started out as
 https://github.com/jmalins/BattleBot-Control
 
-This new version is updated in a few "interesting" ways:
-1. It supports recording and playback of your manual control. 
+The new version is updated in a few "interesting" ways, but all the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
+https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
+
+1. It now supports recording and playback of your manual control. 
 Press the red button, move the controls, click the recordin off, then under the gear, use one of the Save buttons and then the Animate buttons to play it back.
 You can also edit the recording in the text box on Settings panel. The format is <tt>[_interval_, [*delay*, *left*:*right*:*weapon*]]</tt>.
-The inner ,[] section can repeat as often as you like. They are saved in the file system as /1.JSON, /2.JSON, etc... and can also be edited, downloaded or uploaded in the file editor. If you create a /0.JSON file, it will be played back automatically on startup.
+The inner ,[] section can repeat as often as you like. They are saved in the file system as /1.JSON, /2.JSON, etc... and can also be edited, downloaded or uploaded in the file editor. 
 <br>![Control Page](https://user-images.githubusercontent.com/419392/136255712-a1a32200-db01-432b-a2fa-a7d1682e08b1.png)
 <br>![Control Settings page](https://user-images.githubusercontent.com/419392/136254679-caab4dbd-3fd5-4eb1-a2a9-d1af3abfd033.png)
+<BR>- These recordings are interpolated on playback for smooth motion. Even very crude jumps will "wipe" over the interval time.
+<BR>- If you create a /0.JSON file, it will be played back automatically on startup, followed by 1.json, 2, etc... If there is no 1.json, 0.json will repeat without a pause. 
 
-2. All the other advances from the prior repo, the onboard editor, the ping and GPIO sensors, etc... are still in there.
-https://github.com/JamesNewton/BattleBot-Control/tree/patch-2#development-setup
 
 3. It compiles for both esp-8266 AND ESP32 under <a href="https://platformio.org/install/ide?install=vscode">PlatformIO</a>. 
 And under Arduino IDE without some effort; see the <a href="https://github.com/JamesNewton/SDMG-Web-Bot/tree/ArduinoIDEv1">ArduinoIDEv1</A> branch. 
 The key is that the ESP32 has far more processing ower and will (eventually) support https web service which may allow access to the sensor 
-(including the camera) on the cell phone. <a href="https://hackaday.io/project/184720-web-smart-phone-screen-blink-bot">Another method of getting access
-to phone sensors is in the works</a>.
+(including the camera) on the cell phone. <a href="https://hackaday.io/project/184720-web-smart-phone-screen-blink-bot">Another method of getting access to phone sensors is in the works</a>.
+
+4. Edit the config.ini file to specify options. For now, it just supports different types of weapons:
+- Standard Servos (with adjustable min and max microseconds)
+- PWM devices like DC motors, lasers, or analog outputs. 
 
 ### Web programming
 

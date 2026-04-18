@@ -11,14 +11,16 @@
 // Tools / Flash Size / 4M (3M SPIFFS)
 
 #include <Arduino.h> //platformio
+#include <ESPAsyncWebServer.h>
 #include <FS.h>
 #ifdef ESP32
 #include "ESP32DevKitC-Hardware.h"
-#include <SPIFFS.h>
+#include <WiFi.h>          // Required on ESP32 for WiFi.begin(), WiFi.softAP(), etc.
+#include <AsyncTCP.h>      // Required base for ESP32 Async Web Server
 #include <ESPmDNS.h>
 #include <ESP32Servo.h>
-//#include <LITTLEFS.h>
-//#define SPIFFS LITTLEFS
+#include <LittleFS.h>
+#define SPIFFS LittleFS
 #elif defined(ESP8266) 
 #include "NodeMCU-Hardware.h"
 #include <ESP8266WiFi.h>
@@ -29,8 +31,7 @@
 #include <LittleFS.h>
 #define SPIFFS LittleFS
 #endif
-#include <ESPAsyncWebServer.h>
-#include <SPIFFSEditor.h>
+#include "SPIFFSEditor.h"
 #include <NewPing.h> //platformio
 //#include <NewPingESP8266.h> //arduino IDE
 #include <stdlib.h>
@@ -310,6 +311,8 @@ void onWSEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
     case WS_EVT_ERROR:
       DBG_OUTPUT_PORT.printf("ws[%s][%u] error(%u)\n", server->url(), client->id(), *((uint16_t*) arg));
       break;
+    case WS_EVT_PING: // Avoid compiler warning
+      break;
     case WS_EVT_PONG:
       DBG_OUTPUT_PORT.printf("ws[%s][%u] pong[%u]\n", server->url(), client->id(), len);
       break;
@@ -445,6 +448,10 @@ void setupHardware() {
     weaponESC.writeMicroseconds(weaponMinUs);
   } else {
     // Setup for standard PWM (Lasers, DC Motors)
+// #ifdef ESP32
+//     // ESP32 uses dedicated hardware PWM! Unlock 12-bit (0-4095) safely.
+//     analogWriteResolution(PIN_WEAPON_ESC, 12);
+// #endif
     pinMode(PIN_WEAPON_ESC, OUTPUT);
     analogWrite(PIN_WEAPON_ESC, 0); 
   }
@@ -819,8 +826,11 @@ void setup(void){
 void loop(void){
   if (newCommandAvailable) {
     newCommandAvailable = false; // clear flag first
+    // Make a fast, local photocopy of the buffer so the network thread can't overwrite it while we parse
+    char localCmd[32];
+    strlcpy(localCmd, incomingCmdBuffer, sizeof(localCmd));
     enterState(STATE_DRIVING_WITH_TIMEOUT);
-    updateHardware(incomingCmdBuffer);
+    updateHardware(localCmd);
   }
   handleInterpolation();
   if (Serial.available() > 0) {

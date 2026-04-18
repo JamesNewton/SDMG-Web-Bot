@@ -873,7 +873,7 @@ var WebSocketConnection = (function (Connection$$1) {
     this.setState(Connection$$1.CONNECTING)
     Connection$$1.prototype.start.call(this)
     this.startTimeMs = new Date().getTime()
-    this.socket = new WebSocket(("ws://" + (this.hostName) + "/ws"), [ 'arduino' ])
+    this.socket = new WebSocket(("ws://" + (this.hostName) + "/ws"))//, [ 'arduino' ]) Cause of iOS issues?
     this.socket.onopen = function () {
       this$1.setState(Connection$$1.CONNECTED)
     }
